@@ -1,0 +1,59 @@
+Exercise 1: Mocking and Stubbing
+
+import static org.mockito.Mockito.*;
+import static org.junit.jupiter.api.Assertions.*;
+import org.junit.jupiter.api.Test;
+import org.mockito.Mockito;
+public class MyServiceTest_Mocking {
+    public interface ExternalApi {
+        String getData();
+    }
+    public class MyService {
+        private ExternalApi api;
+        public MyService(ExternalApi api) {
+            this.api = api;
+        }
+        public String fetchData() {
+            return api.getData();
+        }
+    }
+    @Test
+    public void testExternalApiMockingAndStubbing() {
+        ExternalApi mockApi = Mockito.mock(ExternalApi.class);
+        when(mockApi.getData()).thenReturn("Mock Data");
+
+        MyService service = new MyService(mockApi);
+        String result = service.fetchData();
+        assertEquals("Mock Data", result);
+    }
+}
+
+
+
+
+Exercise 2: Verifying Interactions
+
+import static org.mockito.Mockito.*;
+import org.junit.jupiter.api.Test;
+import org.mockito.Mockito;
+public class MyServiceTest_Verification {
+    public interface ExternalApi {
+        String getData();
+    }
+    public class MyService {
+        private ExternalApi api;
+        public MyService(ExternalApi api) {
+            this.api = api;
+        }
+        public String fetchData() {
+            return api.getData();
+        }
+    }
+    @Test
+    public void testVerifyGetDataCalled() {
+        ExternalApi mockApi = Mockito.mock(ExternalApi.class);
+        MyService service = new MyService(mockApi);
+        service.fetchData();
+        verify(mockApi).getData();
+    }
+}
