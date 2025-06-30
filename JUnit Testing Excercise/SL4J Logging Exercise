@@ -1,0 +1,44 @@
+Exercise 1: Logging Error Messages and Warning Levels
+pom.xml
+
+<dependencies>
+    <dependency>
+        <groupId>org.slf4j</groupId>
+        <artifactId>slf4j-api</artifactId>
+        <version>1.7.30</version>
+    </dependency>
+    <dependency>
+        <groupId>ch.qos.logback</groupId>
+        <artifactId>logback-classic</artifactId>
+        <version>1.2.3</version>
+    </dependency>
+</dependencies>
+LoggingExample.java
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+public class LoggingExample {
+    private static final Logger logger = LoggerFactory.getLogger(LoggingExample.class);
+
+    public static void main(String[] args) {
+        logger.error("This is an error message");
+        logger.warn("This is a warning message");
+    }
+}
+
+
+Logback.xml
+<configuration>
+    <appender name="STDOUT" class="ch.qos.logback.core.ConsoleAppender">
+        <encoder>
+            <pattern>%d{HH:mm:ss.SSS} [%thread] %-5level %logger{36} - %msg%n</pattern>
+        </encoder>
+    </appender>
+    <root level="debug">
+        <appender-ref ref="STDOUT" />
+    </root>
+</configuration>
+
+
+Output:
+HH:mm:ss.SSS [main] ERROR LoggingExample - This is an error message
+HH:mm:ss.SSS [main] WARN  LoggingExample - This is a warning message
