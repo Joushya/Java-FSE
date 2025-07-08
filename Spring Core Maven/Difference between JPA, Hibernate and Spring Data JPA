@@ -1,0 +1,120 @@
+Employee.java
+
+package com.example.model;
+import jakarta.persistence.*;
+@Entity
+public class Employee {
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Integer id;
+    private String name;
+    private double salary;
+    public Employee() {}
+    public Employee(String name, double salary) {
+        this.name = name;
+        this.salary = salary;
+    }
+    // Getters and Setters
+    public Integer getId() { return id; }
+    public String getName() { return name; }
+    public double getSalary() { return salary; }
+    public void setId(Integer id) { this.id = id; }
+    public void setName(String name) { this.name = name; }
+    public void setSalary(double salary) { this.salary = salary; }
+}
+
+
+
+HibernateExample.java
+
+package com.example.hibernate;
+import com.example.model.Employee;
+import org.hibernate.*;
+import org.hibernate.cfg.Configuration;
+public class HibernateExample {
+    private static SessionFactory factory;
+    public static void main(String[] args) {
+        factory = new Configuration().configure("hibernate.cfg.xml")
+                                     .addAnnotatedClass(Employee.class)
+                                     .buildSessionFactory();
+        Employee emp = new Employee("John", 50000);
+        addEmployee(emp);
+    }
+    public static void addEmployee(Employee employee){
+        Session session = factory.openSession();
+        Transaction tx = null;
+        Integer employeeID = null;
+        try {
+            tx = session.beginTransaction();
+            employeeID = (Integer) session.save(employee); 
+            tx.commit();
+            System.out.println("Employee saved using Hibernate: " + employeeID);
+        } catch (HibernateException e) {
+            if (tx != null) tx.rollback();
+            e.printStackTrace(); 
+        } finally {
+            session.close(); 
+        }
+    }
+}
+
+
+
+Output:
+Employee saved using Hibernate: 1
+
+
+
+JpaExampleService.java
+
+package com.example.jpa;
+import com.example.model.Employee;
+import jakarta.persistence.*;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+@Service
+public class JpaExampleService {
+
+    @PersistenceContext
+    private EntityManager entityManager;
+    @Transactional
+    public void addEmployee(Employee employee) {
+        entityManager.persist(employee);
+        System.out.println("Employee saved using JPA: " + employee.getId());
+    }
+}
+
+
+Output:
+Employee saved using JPA: 2
+
+
+
+EmployeeRepository.java
+
+package com.example.repository;
+import com.example.model.Employee;
+import org.springframework.data.jpa.repository.JpaRepository;
+public interface EmployeeRepository extends JpaRepository<Employee, Integer> {}
+SpringDataJpaExample.java
+package com.example.service;
+import com.example.model.Employee;
+import com.example.repository.EmployeeRepository;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+@Service
+public class SpringDataJpaExample {
+    @Autowired
+    private EmployeeRepository employeeRepository;
+
+    @Transactional
+    public void addEmployee(Employee employee) {
+        employeeRepository.save(employee);
+        System.out.println("Employee saved using Spring Data JPA: " + employee.getId());
+    }
+}
+
+
+Output:
+Employee saved using Spring Data JPA: 3
