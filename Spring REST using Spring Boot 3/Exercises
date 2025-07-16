@@ -1,0 +1,301 @@
+Spring REST Hands-on:
+
+
+1)Create a Spring Web Project using Maven 
+SpringLearnApplication.java
+package com.cognizant;
+import org.springframework.boot.SpringApplication;
+import org.springframework.boot.autoconfigure.SpringBootApplication;
+@SpringBootApplication
+public class SpringLearnApplication {
+    public static void main(String[] args) {
+        SpringApplication.run(SpringLearnApplication.class, args);
+        System.out.println("Spring Boot Application Started!");
+    }
+}
+Output:
+ 
+2)Spring Core – Load Country from Spring Configuration XML 
+SpringLearnApplication.java
+package com.cognizant.spring_learn;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.context.ApplicationContext;
+import org.springframework.context.support.ClassPathXmlApplicationContext;
+
+import com.cognizant.spring_learn.Country;
+public class SpringLearnApplication {
+    private static final Logger LOGGER = LoggerFactory.getLogger(SpringLearnApplication.class);
+    public static void main(String[] args) {
+        LOGGER.info("START");
+        displayCountry();
+        LOGGER.info("END");
+    }
+    public static void displayCountry() {
+        ApplicationContext context = new ClassPathXmlApplicationContext("country.xml");
+        Country country = (Country) context.getBean("country", Country.class);
+        LOGGER.debug("Country : {}", country.toString());
+    }
+}
+Country.java
+package com.cognizant.spring_learn;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+public class Country {
+    private static final Logger LOGGER = LoggerFactory.getLogger(Country.class);
+    private String code;
+    private String name;
+    public Country() {
+    	System.out.println("Inside Country Constructor");
+        LOGGER.debug("Inside Country Constructor.");
+        }
+
+    public String getCode() {
+        LOGGER.debug("Inside getCode");
+        return code;
+    }
+    public void setCode(String code) {
+        LOGGER.debug("Inside setCode");
+        this.code = code;
+    }
+    public String getName() {
+        LOGGER.debug("Inside getName");
+        return name;
+    }
+    public void setName(String name) {
+        LOGGER.debug("Inside setName");
+        this.name = name;
+    }
+    @Override
+    public String toString() {
+        return "Country [code=" + code + ", name=" + name + "]";
+    }
+}
+country.xml
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="
+	http://www.springframework.org/schema/beans 
+	http://www.springframework.org/schema/beans/spring-beans.xsd">
+	<bean id="country" class="com.cognizant.spring_learn.Country">
+		<property name="code" value="IN" />
+		<property name="name" value="India" />
+	</bean>
+</beans>
+Output:
+21:50:02.458 [main] DEBUG com.cognizant.spring_learn.SpringLearnApplication - Country : Country [code=IN, name=India]
+3)Hello World RESTful Web Service
+SpringLearnApplication.java
+package com.cognizant.spring_learn;
+import org.springframework.boot.SpringApplication;
+import org.springframework.boot.autoconfigure.SpringBootApplication;
+@SpringBootApplication
+public class SpringLearnApplication {
+    public static void main(String[] args) {
+        SpringApplication.run(SpringLearnApplication.class, args);
+    }
+}
+HelloController.java
+package com.cognizant.spring_learn.controller;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RestController;
+@RestController
+public class HelloController {
+    private static final Logger LOGGER = LoggerFactory.getLogger(HelloController.class);
+    @GetMapping("/hello")
+    public String sayHello() {
+        LOGGER.info("START");
+        String message = "Hello World!!";
+        LOGGER.info("END");
+        return message;
+    }
+}
+Output:
+ 
+4)REST - Country Web Service 
+CountryController.java
+package com.cognizant.spring_learn.controller;
+
+import com.cognizant.spring_learn.Country;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.context.ApplicationContext;
+import org.springframework.context.support.ClassPathXmlApplicationContext;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
+@RestController
+public class CountryController {
+    private static final Logger LOGGER = LoggerFactory.getLogger(CountryController.class);
+    @RequestMapping("/country")
+    public Country getCountryIndia() {
+        LOGGER.info("START");
+        ApplicationContext context = new ClassPathXmlApplicationContext("country.xml");
+        Country country = context.getBean("country", Country.class);
+        LOGGER.debug("Country Bean: {}", country.toString());
+        LOGGER.info("END");
+        return country;
+    }
+}
+
+ 
+5)REST - Get country based on country code 
+
+country.xml
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:util="http://www.springframework.org/schema/util"
+	xsi:schemaLocation="
+	http://www.springframework.org/schema/beans 
+	http://www.springframework.org/schema/beans/spring-beans.xsd
+	http://www.springframework.org/schema/util 
+	http://www.springframework.org/schema/util/spring-util.xsd">
+	<bean id="country" class="com.cognizant.spring_learn.Country">
+		<property name="code" value="IN" />
+		<property name="name" value="India" />
+	</bean>
+	<util:list id="countryList" value-type="com.cognizant.spring_learn.Country">
+		<bean class="com.cognizant.spring_learn.Country">
+			<property name="code" value="IN" />
+			<property name="name" value="India" />
+		</bean>
+		<bean class="com.cognizant.spring_learn.Country">
+			<property name="code" value="US" />
+			<property name="name" value="United States" />
+		</bean>
+		<bean class="com.cognizant.spring_learn.Country">
+			<property name="code" value="DE" />
+			<property name="name" value="Germany" />
+		</bean>
+		<bean class="com.cognizant.spring_learn.Country">
+			<property name="code" value="JP" />
+			<property name="name" value="Japan" />
+		</bean>
+	</util:list>
+</beans>
+
+
+CountryService.java
+
+package com.cognizant.spring_learn.service;
+import java.util.List;
+import com.cognizant.spring_learn.Country;
+import org.springframework.context.ApplicationContext;
+import org.springframework.context.support.ClassPathXmlApplicationContext;
+import org.springframework.stereotype.Service;
+@Service
+public class CountryService {
+    public Country getCountry(String code) {
+        ApplicationContext context = new ClassPathXmlApplicationContext("country.xml");
+        List<Country> countryList = (List<Country>) context.getBean("countryList");
+
+        return countryList.stream()
+                .filter(c -> c.getCode().equalsIgnoreCase(code))
+                .findFirst()
+                .orElse(null); // or throw an exception if preferred
+    }
+}
+
+CountryController.java
+
+package com.cognizant.spring_learn.controller;
+import com.cognizant.spring_learn.Country;
+import com.cognizant.spring_learn.service.CountryService;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.*;
+@RestController
+public class CountryController {
+    private static final Logger LOGGER = LoggerFactory.getLogger(CountryController.class);
+    @Autowired
+    private CountryService countryService;
+    @GetMapping("/country/{code}")
+    public Country getCountry(@PathVariable String code) {
+        LOGGER.info("START - Fetching country with code: {}", code);
+        Country country = countryService.getCountry(code);
+        LOGGER.info("END");
+        return country;
+    }
+}
+
+
+
+
+ 
+JWT-handson
+
+1)Create authentication service that returns JWT 
+JwtUtil.java
+package com.cognizant.spring_learn.util;
+import io.jsonwebtoken.Jwts;
+import io.jsonwebtoken.SignatureAlgorithm;
+import java.util.Date;
+import org.springframework.stereotype.Component;
+@Component
+public class JwtUtil {
+    private final String secretKey = "secret"; // Use strong key in real projects
+    public String generateToken(String username) {
+        return Jwts.builder()
+                .setSubject(username)
+                .setIssuedAt(new Date(System.currentTimeMillis()))
+                .setExpiration(new Date(System.currentTimeMillis() + 10 * 60 * 1000)) // 10 mins
+                .signWith(SignatureAlgorithm.HS256, secretKey)
+                .compact();
+    }
+}
+
+
+AuthenticationController.java
+package com.cognizant.spring_learn.controller;
+import com.cognizant.spring_learn.util.JwtUtil;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
+import org.springframework.util.Base64Utils;
+import org.springframework.web.bind.annotation.*;
+import javax.servlet.http.HttpServletRequest;
+@RestController
+public class AuthenticationController {
+    @Autowired
+    private JwtUtil jwtUtil;
+    @RequestMapping("/authenticate")
+    public ResponseEntity<?> authenticate(HttpServletRequest request) {
+        String authHeader = request.getHeader("Authorization");
+        if (authHeader != null && authHeader.startsWith("Basic ")) {
+            String base64Credentials = authHeader.substring("Basic ".length());
+            String credentials = new String(Base64Utils.decodeFromString(base64Credentials));
+            String[] values = credentials.split(":", 2);
+            String username = values[0];
+            String password = values[1];
+            // Hardcoded for demo: accept user:pwd
+            if ("user".equals(username) && "pwd".equals(password)) {
+                String token = jwtUtil.generateToken(username);
+                return ResponseEntity.ok("{\"token\":\"" + token + "\"}");
+            }
+        }
+        return ResponseEntity.status(401).body("Unauthorized");
+    }
+}
+
+
+SecurityConfig.java
+package com.cognizant.spring_learn.config;
+import org.springframework.context.annotation.Configuration;
+import org.springframework.security.config.annotation.web.builders.HttpSecurity;
+import org.springframework.security.config.annotation.web.configuration.*;
+@Configuration
+@EnableWebSecurity
+public class SecurityConfig extends WebSecurityConfigurerAdapter {
+    @Override
+    protected void configure(HttpSecurity http) throws Exception {
+        http.csrf().disable()
+            .authorizeRequests()
+            .antMatchers("/authenticate").permitAll()
+            .anyRequest().authenticated();
+    }
+}
+
+ 
