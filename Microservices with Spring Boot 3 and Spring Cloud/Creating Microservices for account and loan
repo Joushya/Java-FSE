@@ -1,0 +1,77 @@
+MICROSERVICES WITH API GATEWAY:
+
+Creating Microservices for account and loan
+
+Account Microservice:
+AccountController.java
+
+package com.cognizant.account.controller;
+import org.springframework.web.bind.annotation.*;
+import java.util.Map;
+@RestController
+@RequestMapping("/accounts")
+public class AccountController {
+    @GetMapping("/{number}")
+    public Map<String, Object> getAccount(@PathVariable String number) {
+        return Map.of(
+            "number", number,
+            "type", "savings",
+            "balance", 234343
+        );
+    }
+}
+
+
+
+AccountApplication.java
+package com.cognizant.account;
+import org.springframework.boot.SpringApplication;
+import org.springframework.boot.autoconfigure.SpringBootApplication;
+@SpringBootApplication
+public class AccountApplication {
+
+    public static void main(String[] args) {
+        SpringApplication.run(AccountApplication.class, args);
+    }
+}
+
+ 
+Loan Microservice:
+LoanController.java
+package com.cognizant.loan.controller;
+import org.springframework.web.bind.annotation.*;
+import java.util.Map;
+@RestController
+@RequestMapping("/loans")
+public class LoanController {
+    @GetMapping("/{number}")
+    public Map<String, Object> getLoan(@PathVariable String number) {
+        return Map.of(
+            "number", number,
+            "type", "car",
+            "loan", 400000,
+            "emi", 3258,
+            "tenure", 18
+        );
+    }
+}
+
+
+
+LoanApplication.java
+package com.cognizant.loan;
+import org.springframework.boot.SpringApplication;
+import org.springframework.boot.autoconfigure.SpringBootApplication;
+@SpringBootApplication
+public class LoanApplication {
+    public static void main(String[] args) {
+        SpringApplication.run(LoanApplication.class, args);
+    }
+}
+application.properties
+# Change port to avoid conflict with Account microservice
+server.port=8081
+
+ 
+
+
