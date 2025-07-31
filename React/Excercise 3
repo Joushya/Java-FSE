@@ -1,0 +1,90 @@
+Counter.js
+
+import React from 'react';
+import Counter from './components/Counter';
+import WelcomeButton from './components/WelcomeButton';
+import OnPressButton from './components/OnPressButton';
+import CurrencyConvertor from './components/CurrencyConverter';
+function App() {
+  return (
+    <div className="App">
+      <h1>React Event Examples App</h1>
+      <Counter />
+      <WelcomeButton />
+      <OnPressButton />
+      <CurrencyConvertor />
+    </div>
+  );
+}
+export default App;
+
+
+OnPressButton.js
+
+import React from 'react';
+function OnPressButton() {
+  const handlePress = (event) => {
+    alert("I was clicked");
+    console.log(event); // Synthetic event
+  };
+  return <button onClick={handlePress}>OnPress</button>;
+}
+export default OnPressButton;
+WelcomeButton.js
+import React from 'react';
+function sayMessage(message) {
+  alert(message);
+}
+function WelcomeButton() {
+  return <button onClick={() => sayMessage("Welcome")}>Say Welcome</button>;
+}
+export default WelcomeButton;
+
+
+
+CurrencyConverter.js
+
+import React, { useState } from 'react';
+function CurrencyConvertor() {
+  const [inr, setInr] = useState('');
+  const [euro, setEuro] = useState('');
+  const handleSubmit = () => {
+    const rate = 0.011; // INR to Euro rate
+    setEuro((parseFloat(inr) * rate).toFixed(2));
+  };
+  return (
+    <div>
+      <h2>Currency Converter</h2>
+      <input 
+        type="number" 
+        value={inr} 
+        onChange={e => setInr(e.target.value)} 
+        placeholder="Enter INR"
+      />
+      <button onClick={handleSubmit}>Convert</button>
+      {euro && <p>{inr} INR = {euro} Euro</p>}
+    </div>
+  );
+}
+export default CurrencyConvertor;
+
+
+App.js
+
+import React from 'react';
+import Counter from './components/Counter';
+import WelcomeButton from './components/WelcomeButton';
+import OnPressButton from './components/OnPressButton';
+import CurrencyConverter from './components/CurrencyConverter';
+function App() {
+  return (
+    <div className="App">
+      <h1>React Event Examples App</h1>
+      <Counter />
+      <WelcomeButton />
+      <OnPressButton />
+      <CurrencyConverter />
+    </div>
+  );
+}
+export default App;
