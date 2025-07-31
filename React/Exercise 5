@@ -1,0 +1,67 @@
+BookDetails.js
+function BookDetails() {
+  return <div><h2>📚 Book Details</h2><p>Title: React Essentials</p></div>;
+}
+export default BookDetails;
+BlogDetails.js
+function BlogDetails() {
+  return <div><h2>📝 Blog Details</h2><p>Topic: React Conditional Rendering</p></div>;
+}
+export default BlogDetails;
+CourseDetails.js
+function CourseDetails() {
+  return <div><h2>🎓 Course Details</h2><p>Course: Full Stack Development</p></div>;
+}
+export default CourseDetails;
+ContentList.js
+import React from 'react';
+const data = [
+  { id: 1, type: 'Book', title: 'Learning React' },
+  { id: 2, type: 'Blog', title: 'React vs Angular' },
+  { id: 3, type: 'Course', title: 'React for Beginners' }
+];
+function ContentList() {
+  return (
+    <div>
+      <h2>📃 All Contents</h2>
+      <ul>
+        {data.map(item => (
+          <li key={item.id}>
+            <strong>{item.type}</strong>: {item.title}
+          </li>
+        ))}
+      </ul>
+    </div>
+  );
+}
+export default ContentList;
+App.js
+import React, { useState } from 'react';
+import BookDetails from './components/BookDetails';
+import BlogDetails from './components/BlogDetails';
+import CourseDetails from './components/CourseDetails';
+import ContentList from './components/ContentList';
+function App() {
+  const [contentType, setContentType] = useState('book')
+  const renderContent = () => {
+    if (contentType === 'book') return <BookDetails />;
+    else if (contentType === 'blog') return <BlogDetails />;
+    else if (contentType === 'course') return <CourseDetails />;
+    else return <p>Please select a content type</p>;
+  };
+  return (
+    <div className="App">
+      <h1>Welcome to BloggerApp</h1> 
+      {/* Button-based conditional rendering */}
+      <div>
+        <button onClick={() => setContentType('book')}>Book</button>
+        <button onClick={() => setContentType('blog')}>Blog</button>
+        <button onClick={() => setContentType('course')}>Course</button>
+        <button onClick={() => setContentType('list')}>List View</button>
+      </div>
+      <hr />
+      {contentType === 'list' ? <ContentList /> : renderContent()}
+    </div>
+  );
+}
+export default App;
