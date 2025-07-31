@@ -1,0 +1,46 @@
+App.js
+import React from 'react';
+function App() {
+  const office1 = {
+    name: "TechPark Building",
+    rent: 75000,
+    address: "5th Street, Chennai"
+  };
+  const officeList = [
+    { name: "Startup Hub", rent: 45000, address: "MG Road, Bangalore" },
+    { name: "BizSpace", rent: 85000, address: "Banjara Hills, Hyderabad" },
+    { name: "WorkNest", rent: 60000, address: "South Ex, Delhi" },
+  ];
+  const rentStyle = rent => ({
+    color: rent < 60000 ? 'red' : 'green',
+    fontWeight: 'bold'
+  });
+  return (
+    <div style={{ padding: '20px', fontFamily: 'Arial' }}>
+      <h1>Office Space Rental</h1>
+      <img
+        src="office-with-lot-desks-computers.jpg"
+        alt="Office Space"
+        style={{ width: '20%', borderRadius: '10px', marginBottom: '20px' }}
+      />
+      <h2>Featured Office</h2>
+      <p><strong>Name:</strong> {office1.name}</p>
+      <p><strong>Rent:</strong> <span style={rentStyle(office1.rent)}>{office1.rent}</span></p>
+      <p><strong>Address:</strong> {office1.address}</p>
+      <h2>Available Office Spaces</h2>
+      <ul>
+        {officeList.map((office, index) => (
+          <li key={index} style={{ marginBottom: '15px' }}>
+            <p><strong>Name:</strong> {office.name}</p>
+            <p>
+              <strong>Rent:</strong>{' '}
+              <span style={rentStyle(office.rent)}>{office.rent}</span>
+            </p>
+            <p><strong>Address:</strong> {office.address}</p>
+          </li>
+        ))}
+      </ul>
+    </div>
+  );
+}
+export default App;
